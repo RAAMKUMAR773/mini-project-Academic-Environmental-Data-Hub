@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login - Environmental Data Hub</title>
+
+<style>
+*{box-sizing:border-box;font-family:Segoe UI,Arial}
+body{
+margin:0;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#eef1f5;
+}
+
+/* Login Card */
+.login-card{
+background:white;
+padding:40px;
+width:360px;
+border-radius:16px;
+box-shadow:0 6px 25px rgba(0,0,0,.1);
+text-align:center;
+}
+
+.login-card h2{
+margin-bottom:25px;
+color:#111827;
+}
+
+/* Inputs */
+input{
+width:100%;
+padding:12px;
+margin-bottom:16px;
+border:1px solid #d1d5db;
+border-radius:8px;
+font-size:14px;
+}
+
+/* Button */
+button{
+width:100%;
+padding:12px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+font-size:15px;
+cursor:pointer;
+transition:.3s;
+}
+button:hover{background:#1e40af}
+
+/* Footer */
+.footer{
+margin-top:15px;
+font-size:13px;
+color:#6b7280;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+<h2>Environmental Data Hub</h2>
+
+<form onsubmit="login(event)">
+<input type="text" id="username" placeholder="Username" required>
+<input type="password" id="password" placeholder="Password" required>
+<button type="submit">Login</button>
+</form>
+
+<div class="footer">
+Secure Environmental Monitoring System
+</div>
+
+</div>
+
+<script>
+function login(e){
+e.preventDefault();
+
+/* Demo login (you can connect API later) */
+const u=document.getElementById("username").value;
+const p=document.getElementById("password").value;
+
+if(u==="admin" && p==="admin123"){
+window.location.href="index.html";
+}else{
+alert("Invalid credentials");
+}
+}
+</script>
+
+</body>
+</html>

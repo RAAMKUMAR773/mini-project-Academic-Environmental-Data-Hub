@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>View Environmental Data</title>
+
+<style>
+*{box-sizing:border-box;font-family:Segoe UI,Arial}
+body{margin:0;display:flex;background:#eef1f5}
+
+/* Sidebar */
+.sidebar{
+width:240px;
+background:#1f2937;
+color:white;
+height:100vh;
+padding:25px 20px;
+}
+.sidebar h2{margin-bottom:30px}
+.sidebar a{
+display:block;
+padding:12px;
+color:#d1d5db;
+text-decoration:none;
+margin-bottom:12px;
+border-radius:8px;
+transition:.3s;
+}
+.sidebar a:hover{background:#374151;color:white}
+
+/* Content */
+.content{
+flex:1;
+padding:35px;
+}
+
+.header{
+font-size:26px;
+font-weight:600;
+margin-bottom:20px;
+color:#111827;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:14px;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+/* Controls */
+.controls{
+display:flex;
+justify-content:space-between;
+margin-bottom:15px;
+}
+
+input{
+padding:10px;
+border:1px solid #d1d5db;
+border-radius:8px;
+width:250px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+background:#2563eb;
+color:white;
+border-radius:8px;
+cursor:pointer;
+margin-left:8px;
+}
+button:hover{background:#1e40af}
+
+/* Table */
+table{
+width:100%;
+border-collapse:collapse;
+}
+th{
+background:#f3f4f6;
+padding:12px;
+text-align:center;
+}
+td{
+padding:10px;
+text-align:center;
+border-top:1px solid #e5e7eb;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>Env Dashboard</h2>
+<a href="dashboard.html">Dashboard</a>
+<a href="add_data.html">Add Data</a>
+<a href="view_data.html">View Data</a>
+</div>
+
+<div class="content">
+
+<div class="header">Environmental Data Records</div>
+
+<div class="card">
+
+<div class="controls">
+<input type="text" id="searchBox" placeholder="Search...">
+<div>
+<button onclick="downloadCSV()">Download CSV</button>
+<button onclick="window.print()">Download PDF</button>
+</div>
+</div>
+
+<table id="dataTable">
+<thead>
+<tr>
+<th>ID</th>
+<th>Date</th>
+<th>Temperature</th>
+<th>Humidity</th>
+<th>AQI</th>
+<th>Pollution Level</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+</div>
+</div>
+
+<script>
+let allData=[];
+
+fetch("http://127.0.0.1:8000/view-data")
+.then(r=>r.json())
+.then(data=>{
+allData=data;
+renderTable(data);
+});
+
+function renderTable(data){
+const tb=document.querySelector("#dataTable tbody");
+tb.innerHTML="";
+data.forEach(row=>{
+tb.innerHTML+=`<tr>
+<td>${row.id}</td>
+<td>${row.date}</td>
+<td>${row.temperature}</td>
+<td>${row.humidity}</td>
+<td>${row.aqi}</td>
+<td>${row.pollution_level}</td>
+</tr>`;
+});
+}
+
+/* Search filter */
+document.getElementById("searchBox").addEventListener("keyup",function(){
+const val=this.value.toLowerCase();
+const filtered=allData.filter(r=>
+Object.values(r).join(" ").toLowerCase().includes(val)
+);
+renderTable(filtered);
+});
+
+function downloadCSV(){
+window.open("http://127.0.0.1:8000/download-csv");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Environmental Data</title>
+
+<style>
+*{box-sizing:border-box;font-family:Segoe UI,Arial}
+body{margin:0;display:flex;background:#eef1f5}
+
+/* Sidebar */
+.sidebar{
+width:240px;
+background:#1f2937;
+color:white;
+height:100vh;
+padding:25px 20px;
+}
+.sidebar h2{margin-bottom:30px;font-weight:600}
+.sidebar a{
+display:block;
+padding:12px;
+color:#d1d5db;
+text-decoration:none;
+margin-bottom:12px;
+border-radius:8px;
+transition:.3s;
+}
+.sidebar a:hover{background:#374151;color:white}
+
+/* Content */
+.content{
+flex:1;
+padding:40px;
+}
+
+.header{
+font-size:26px;
+font-weight:600;
+margin-bottom:25px;
+color:#111827;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:14px;
+width:420px;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+.card h3{margin-top:0;margin-bottom:20px}
+
+input{
+width:100%;
+padding:12px;
+border:1px solid #d1d5db;
+border-radius:8px;
+margin-bottom:14px;
+font-size:14px;
+}
+
+button{
+background:#2563eb;
+color:white;
+border:none;
+padding:12px;
+border-radius:8px;
+width:100%;
+font-size:15px;
+cursor:pointer;
+transition:.3s;
+}
+button:hover{background:#1e40af}
+
+.upload-section{
+margin-top:30px;
+padding-top:20px;
+border-top:1px solid #e5e7eb;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+<h2>Env Dashboard</h2>
+<a href="dashboard.html">Dashboard</a>
+<a href="add_data.html">Add Data</a>
+<a href="view_data.html">View Data</a>
+</div>
+
+<div class="content">
+
+<div class="header">Add Environmental Data</div>
+
+<div class="card">
+
+<h3>Manual Entry</h3>
+
+<form id="dataForm">
+<input type="date" id="date" required>
+<input type="number" id="temperature" placeholder="Temperature" required>
+<input type="number" id="humidity" placeholder="Humidity" required>
+<input type="number" id="aqi" placeholder="AQI" required>
+<input type="text" id="pollution_level" placeholder="Pollution Level" required>
+<button type="submit">Submit Data</button>
+</form>
+
+<div class="upload-section">
+<h3>Bulk Upload CSV</h3>
+<input type="file" id="csvFile">
+<button onclick="uploadCSV()">Upload CSV</button>
+</div>
+
+</div>
+</div>
+
+<script>
+document.getElementById("dataForm").addEventListener("submit",function(e){
+e.preventDefault();
+const d=document.getElementById("date").value;
+const t=document.getElementById("temperature").value;
+const h=document.getElementById("humidity").value;
+const a=document.getElementById("aqi").value;
+const p=document.getElementById("pollution_level").value;
+
+fetch(`http://127.0.0.1:8000/add-data?date=${d}&temperature=${t}&humidity=${h}&aqi=${a}&pollution_level=${p}`,{method:"POST"})
+.then(r=>r.json()).then(d=>alert(d.message));
+});
+
+function uploadCSV(){
+const file=document.getElementById("csvFile").files[0];
+const formData=new FormData();
+formData.append("file",file);
+
+fetch("http://127.0.0.1:8000/upload-csv",{method:"POST",body:formData})
+.then(r=>r.json()).then(d=>alert("Bulk Upload Done"));
+}
+</script>
+
+</body>
+</html>
