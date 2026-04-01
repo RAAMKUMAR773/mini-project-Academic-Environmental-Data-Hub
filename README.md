@@ -80,3 +80,19 @@ If you see an error in the logs mentioning `AttributeError: module 'bcrypt' has 
    pip install bcrypt==3.2.0
    ```
 3. Restart the server (`uvicorn main:app --reload`).
+
+---
+
+## 🔄 Auto-Git Sync (Optional)
+
+To automatically commit and push your changes to GitHub as you work, use the included PowerShell script.
+
+### How to use:
+1. Open a **new** terminal in VS Code.
+2. Run the sync script:
+   ```powershell
+   .\git-sync.ps1
+   ```
+3. Keep this terminal open in the background. It will check for changes every 30 seconds and automatically sync them to your `main` branch.
+
+**Note**: Press `Ctrl+C` in that terminal to stop the auto-sync at any time.
