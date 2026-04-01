@@ -1,142 +1,258 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Add Environmental Data</title>
-
-<style>
-*{box-sizing:border-box;font-family:Segoe UI,Arial}
-body{margin:0;display:flex;background:#eef1f5}
-
-/* Sidebar */
-.sidebar{
-width:240px;
-background:#1f2937;
-color:white;
-height:100vh;
-padding:25px 20px;
-}
-.sidebar h2{margin-bottom:30px;font-weight:600}
-.sidebar a{
-display:block;
-padding:12px;
-color:#d1d5db;
-text-decoration:none;
-margin-bottom:12px;
-border-radius:8px;
-transition:.3s;
-}
-.sidebar a:hover{background:#374151;color:white}
-
-/* Content */
-.content{
-flex:1;
-padding:40px;
-}
-
-.header{
-font-size:26px;
-font-weight:600;
-margin-bottom:25px;
-color:#111827;
-}
-
-.card{
-background:white;
-padding:30px;
-border-radius:14px;
-width:420px;
-box-shadow:0 4px 18px rgba(0,0,0,.08);
-}
-
-.card h3{margin-top:0;margin-bottom:20px}
-
-input{
-width:100%;
-padding:12px;
-border:1px solid #d1d5db;
-border-radius:8px;
-margin-bottom:14px;
-font-size:14px;
-}
-
-button{
-background:#2563eb;
-color:white;
-border:none;
-padding:12px;
-border-radius:8px;
-width:100%;
-font-size:15px;
-cursor:pointer;
-transition:.3s;
-}
-button:hover{background:#1e40af}
-
-.upload-section{
-margin-top:30px;
-padding-top:20px;
-border-top:1px solid #e5e7eb;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Data | Environmental Data Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background: #f8fafc; transition: background 0.3s ease; }
+        .dark body { background: #0f172a; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
 </head>
+<body class="flex min-h-screen dark:text-slate-100">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-colors">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-10">
+                <div id="sidebarIcon" class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                    <svg width="24" height="24" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <span id="sidebarTitle" class="font-bold text-xl text-slate-800 dark:text-white">EnvHub</span>
+            </div>
+            
+            <nav class="space-y-2" id="navLinks">
+                <a href="dashboard.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    Dashboard
+                </a>
+                <a href="add_data.html" class="flex items-center gap-3 p-3 rounded-xl bg-blue-50 text-blue-600 border-r-4 border-blue-600 font-medium transition-all">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Add Data
+                </a>
+                <a href="view_data.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-white transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    View Data
+                </a>
+            </nav>
+        </div>
 
-<body>
+        <div class="mt-auto p-8 space-y-4">
+            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all font-medium">
+                <svg id="sunIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.364 6.364l.707.707M6.343 6.343l.707.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moonIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <span class="dark:hidden">Dark Mode</span>
+                <span class="hidden dark:block">Light Mode</span>
+            </button>
+            <button onclick="logout()" class="flex items-center gap-3 w-full p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all font-medium">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
 
-<div class="sidebar">
-<h2>Env Dashboard</h2>
-<a href="dashboard.html">Dashboard</a>
-<a href="add_data.html">Add Data</a>
-<a href="view_data.html">View Data</a>
-</div>
+    <!-- Main Content -->
+    <main class="flex-1 p-10 overflow-y-auto">
+        <header class="mb-10">
+            <h2 class="text-3xl font-bold text-slate-800 dark:text-white">Add Data</h2>
+            <p class="text-slate-500 dark:text-slate-400">Record new environmental metrics</p>
+        </header>
 
-<div class="content">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Manual Entry -->
+            <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6">Manual Entry</h3>
+                <form id="dataForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Observation Date</label>
+                        <input type="date" id="date" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Temperature (°C)</label>
+                            <input type="number" step="0.1" id="temperature" placeholder="24.5" min="-50" max="60" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Humidity (%)</label>
+                            <input type="number" step="0.1" id="humidity" placeholder="60" min="0" max="100" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">AQI Value</label>
+                        <input type="number" id="aqi" placeholder="45" min="0" max="500" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Location</label>
+                        <input type="text" id="location" placeholder="Campus Area, Laboratory, etc." required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Pollution Level Category</label>
+                        <select id="pollution_level" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all">
+                            <option value="Good">Good</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Unhealthy">Unhealthy</option>
+                            <option value="Hazardous">Hazardous</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-blue-600/20 transition-all transform active:scale-[0.98]">
+                        Save Records
+                    </button>
+                </form>
+            </div>
 
-<div class="header">Add Environmental Data</div>
+            <!-- Bulk Upload -->
+            <div class="space-y-8">
+                <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Bulk Upload</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Upload a CSV file. Expected columns: <b>Date, Temperature, Humidity, AQI, Pollution Level, Location</b>.</p>
+                    
+                    <div id="dropzone" class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-3xl p-10 text-center hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:border-blue-300 transition-all cursor-pointer">
+                        <input type="file" id="csvFile" class="hidden">
+                        <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl mx-auto mb-4 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        </div>
+                        <p class="text-slate-800 dark:text-white font-semibold" id="fileName">Select CSV file</p>
+                        <p class="text-slate-400 dark:text-slate-500 text-xs mt-1">Maximum file size: 5MB</p>
+                    </div>
+                    
+                    <button onclick="uploadCSV()" class="w-full mt-6 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 rounded-xl shadow-lg transition-all transform active:scale-[0.98]">
+                        Process File
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
 
-<div class="card">
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "/";
+        
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.role === 'admin') {
+            document.title = "Admin Panel | Add Data";
+            document.getElementById('sidebarTitle').innerText = "Admin";
+            document.getElementById('sidebarIcon').innerHTML = `<svg width="24" height="24" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>`;
+            
+            const nav = document.getElementById('navLinks');
+            const adminLink = document.createElement('a');
+            adminLink.href = "admin_analytics.html";
+            adminLink.className = "flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium";
+            adminLink.innerHTML = `<svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>Analytics`;
+            nav.appendChild(adminLink);
 
-<h3>Manual Entry</h3>
+            const userLink = document.createElement('a');
+            userLink.href = "admin_users.html";
+            userLink.className = "flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium";
+            userLink.innerHTML = `<svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>Manage User Details`;
+            nav.appendChild(userLink);
+        }
 
-<form id="dataForm">
-<input type="date" id="date" required>
-<input type="number" id="temperature" placeholder="Temperature" required>
-<input type="number" id="humidity" placeholder="Humidity" required>
-<input type="number" id="aqi" placeholder="AQI" required>
-<input type="text" id="pollution_level" placeholder="Pollution Level" required>
-<button type="submit">Submit Data</button>
-</form>
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        }
 
-<div class="upload-section">
-<h3>Bulk Upload CSV</h3>
-<input type="file" id="csvFile">
-<button onclick="uploadCSV()">Upload CSV</button>
-</div>
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
 
-</div>
-</div>
+        // File Selection UI
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('csvFile');
+        const fileNameDisp = document.getElementById('fileName');
 
-<script>
-document.getElementById("dataForm").addEventListener("submit",function(e){
-e.preventDefault();
-const d=document.getElementById("date").value;
-const t=document.getElementById("temperature").value;
-const h=document.getElementById("humidity").value;
-const a=document.getElementById("aqi").value;
-const p=document.getElementById("pollution_level").value;
+        dropzone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => {
+            if (e.target.files.length > 0) {
+                fileNameDisp.innerText = e.target.files[0].name;
+            }
+        };
 
-fetch(`http://127.0.0.1:8000/add-data?date=${d}&temperature=${t}&humidity=${h}&aqi=${a}&pollution_level=${p}`,{method:"POST"})
-.then(r=>r.json()).then(d=>alert(d.message));
-});
+        document.getElementById("dataForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const data = {
+                date: document.getElementById("date").value,
+                temperature: parseFloat(document.getElementById("temperature").value),
+                humidity: parseFloat(document.getElementById("humidity").value),
+                aqi: parseInt(document.getElementById("aqi").value),
+                pollution_level: document.getElementById("pollution_level").value,
+                location: document.getElementById("location").value
+            };
 
-function uploadCSV(){
-const file=document.getElementById("csvFile").files[0];
-const formData=new FormData();
-formData.append("file",file);
+            try {
+                const response = await fetch(`/add-data`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+                const resData = await response.json();
+                if (response.ok) {
+                    alert("Data saved successfully!");
+                    this.reset();
+                } else {
+                    alert(resData.detail || "Error saving data");
+                }
+            } catch (err) {
+                alert("Server connection failed");
+            }
+        });
 
-fetch("http://127.0.0.1:8000/upload-csv",{method:"POST",body:formData})
-.then(r=>r.json()).then(d=>alert("Bulk Upload Done"));
-}
-</script>
+        async function uploadCSV() {
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Please select a file first");
+                return;
+            }
+            const formData = new FormData();
+            formData.append("file", file);
 
+            try {
+                const response = await fetch("/upload-csv", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` },
+                    body: formData
+                });
+                if (response.ok) {
+                    alert("Bulk Upload Complete");
+                    fileNameDisp.innerText = "Select CSV file";
+                    fileInput.value = "";
+                } else {
+                    alert("Upload failed");
+                }
+            } catch (err) {
+                alert("Server connection failed");
+            }
+        }
+    </script>
 </body>
 </html>
+

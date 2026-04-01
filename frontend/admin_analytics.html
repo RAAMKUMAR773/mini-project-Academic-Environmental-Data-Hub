@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background: #f8fafc; transition: background 0.3s ease; }
+        .dark body { background: #0f172a; }
+        .glass-card { 
+            background: rgba(255,255,255,0.8); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255,255,255,0.3); 
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="flex min-h-screen dark:text-slate-100">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-colors">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-10">
+                <div id="sidebarIcon" class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                </div>
+                <span id="sidebarTitle" class="font-bold text-xl text-slate-800 dark:text-white">Admin</span>
+            </div>
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    Dashboard
+                </a>
+                <a href="add_data.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Add Data
+                </a>
+                <a href="view_data.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                    View Data
+                </a>
+                <a href="admin_analytics.html" class="flex items-center gap-3 p-3 rounded-xl bg-blue-50 text-blue-600 border-r-4 border-blue-600 font-medium transition-all">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    Analytics
+                </a>
+                <a href="admin_users.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-white transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Manage User Details
+                </a>
+            </nav>
+        </div>
+        <div class="mt-auto p-8 space-y-4">
+            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all font-medium">
+                <svg id="sunIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.364 6.364l.707.707M6.343 6.343l.707.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moonIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <span class="dark:hidden">Dark Mode</span>
+                <span class="hidden dark:block">Light Mode</span>
+            </button>
+            <button onclick="logout()" class="flex items-center gap-3 w-full p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all font-medium">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-10 overflow-y-auto">
+        <header class="mb-10 flex justify-between items-end">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-white">Monthly Analytics</h2>
+                <p class="text-slate-500 dark:text-slate-400">Long-term environmental trends and user activity</p>
+            </div>
+        </header>
+
+        <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center bg-white dark:bg-slate-800/50 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 transition-colors gap-4">
+            <div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white">Filter Insights</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400">Select a location to filter pollution and correlation data</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <div id="recordCountDisplay" class="hidden items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl border border-blue-100 dark:border-blue-800/50">
+                    <span id="recordCountLabel" class="text-sm font-bold uppercase tracking-wider">Records:</span>
+                    <span id="recordCountValue" class="text-lg font-black">0</span>
+                </div>
+                <select id="locationSelect" onchange="updateFilteredCharts()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all min-w-[200px]">
+                    <option value="">All Locations</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Trends Chart -->
+            <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors col-span-1 lg:col-span-2">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6">Environment Data Trends (All Records)</h3>
+                <div class="h-96">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Pollution Distribution -->
+            <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6">Pollution Level Distribution</h3>
+                <div class="h-80">
+                    <canvas id="pollutionDistChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Temp vs Humidity Correlation -->
+            <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6">Temperature vs. Humidity Correlation</h3>
+                <div class="h-80">
+                    <canvas id="correlationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Location Breakdown -->
+            <div id="locationTableContainer" class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors col-span-1 lg:col-span-2">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6">Location-wise Performance</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-slate-400 dark:text-slate-500 text-sm uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                                <th class="pb-4 font-semibold">Location</th>
+                                <th class="pb-4 font-semibold text-center">Avg. Temp</th>
+                                <th class="pb-4 font-semibold text-center">Avg. AQI</th>
+                                <th class="pb-4 font-semibold text-center">Records</th>
+                                <th class="pb-4 font-semibold text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="locationTableBody" class="text-slate-600 dark:text-slate-300">
+                            <!-- Rows loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- User Activity Table -->
+            <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors col-span-1 lg:col-span-2">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6">User Activity & Records</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-slate-400 dark:text-slate-500 text-sm uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                                <th class="pb-4 font-semibold">User</th>
+                                <th class="pb-4 font-semibold">Email</th>
+                                <th class="pb-4 font-semibold">Role</th>
+                                <th class="pb-4 font-semibold">Total Records Added</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody" class="text-slate-600 dark:text-slate-300">
+                            <!-- Rows loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "/";
+        
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.role !== 'admin') window.location.href = "dashboard.html";
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        let trendChart, pollutionChart, correlationChart;
+        let locationCache = [];
+
+        async function updateFilteredCharts() {
+            const location = document.getElementById('locationSelect').value;
+            const locParam = location ? `?location=${encodeURIComponent(location)}` : '';
+
+            // Update UI visibility
+            const recordCountDisplay = document.getElementById('recordCountDisplay');
+            const recordCountValue = document.getElementById('recordCountValue');
+            const recordCountLabel = document.getElementById('recordCountLabel');
+            const locationTableContainer = document.getElementById('locationTableContainer');
+
+            // Always show the record count display
+            recordCountDisplay.classList.remove('hidden');
+            recordCountDisplay.classList.add('flex');
+
+            if (location) {
+                locationTableContainer.classList.add('hidden');
+                recordCountLabel.textContent = 'Records:';
+                // Find record count from cache
+                const locData = locationCache.find(l => l.location === location);
+                recordCountValue.textContent = locData ? locData.record_count : '0';
+            } else {
+                locationTableContainer.classList.remove('hidden');
+                recordCountLabel.textContent = 'Total Records:';
+                // Sum all record counts from cache
+                const total = locationCache.reduce((sum, l) => sum + (l.record_count || 0), 0);
+                recordCountValue.textContent = total;
+            }
+            
+            // 1. Update Monthly Trends
+            const resTrend = await fetch(`/admin/analytics${locParam}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const trendData = await resTrend.json();
+            if (Array.isArray(trendData)) {
+                if (trendChart) trendChart.destroy();
+                const labels = trendData.map(d => d.month);
+                trendChart = new Chart(document.getElementById('trendChart'), {
+                    type: 'line',
+                    data: {
+                        labels: trendData.map(d => new Date(d.date).toLocaleString()),
+                        datasets: [
+                            { label: 'Temperature (°C)', data: trendData.map(d => d.avg_temp), borderColor: '#ef4444', tension: 0.4 },
+                            { label: 'Humidity (%)', data: trendData.map(d => d.avg_humidity), borderColor: '#3b82f6', tension: 0.4 },
+                            { label: 'AQI', data: trendData.map(d => d.avg_aqi), borderColor: '#10b981', tension: 0.4 }
+                        ]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                display: trendData.length <= 20, // Only show labels if few records
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Update Pollution Distribution
+            const resDist = await fetch(`/admin/trends/pollution-dist${locParam}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const distData = await resDist.json();
+            if (Array.isArray(distData)) {
+                if (pollutionChart) pollutionChart.destroy();
+                pollutionChart = new Chart(document.getElementById('pollutionDistChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: distData.map(d => d.pollution_level),
+                        datasets: [{
+                            data: distData.map(d => d.count),
+                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#3b82f6'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                        }
+                    }
+                });
+            }
+
+            // 3. Update Temp vs Humidity Correlation
+            const resCorr = await fetch(`/admin/trends/temp-hum-correlation${locParam}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const corrData = await resCorr.json();
+            if (Array.isArray(corrData)) {
+                if (correlationChart) correlationChart.destroy();
+                correlationChart = new Chart(document.getElementById('correlationChart'), {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Temp vs Humidity',
+                            data: corrData.map(d => ({ x: d.humidity, y: d.temperature })),
+                            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { title: { display: true, text: 'Humidity (%)', font: { weight: 'bold' } } },
+                            y: { title: { display: true, text: 'Temperature (°C)', font: { weight: 'bold' } } }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+        }
+
+        async function initAnalytics() {
+            try {
+                // 1. Fetch Location Data (Table & Cache)
+                const resLoc = await fetch("/admin/location-analytics", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                locationCache = await resLoc.json();
+                if (Array.isArray(locationCache)) {
+                    const locTbody = document.getElementById('locationTableBody');
+                    locTbody.innerHTML = locationCache.map(l => {
+                        const status = l.avg_aqi < 50 ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400' : 
+                                      l.avg_aqi < 100 ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/40 dark:text-yellow-300' : 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400';
+                        const statusText = l.avg_aqi < 50 ? 'Excellent' : l.avg_aqi < 100 ? 'Moderate' : 'Poor';
+
+                        return `
+                        <tr class="border-b border-slate-50 dark:border-slate-800/40 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-all">
+                            <td class="py-4 font-semibold text-slate-800 dark:text-white">${l.location || 'Unknown'}</td>
+                            <td class="py-4 text-center text-slate-600 dark:text-slate-300">${parseFloat(l.avg_temp).toFixed(1)}°C</td>
+                            <td class="py-4 text-center font-bold text-slate-800 dark:text-white">${Math.round(l.avg_aqi)}</td>
+                            <td class="py-4 text-center text-slate-500 dark:text-slate-400 text-sm">${l.record_count}</td>
+                            <td class="py-4 text-right">
+                                <span class="px-3 py-1 ${status} rounded-full text-[10px] font-bold uppercase">${statusText}</span>
+                            </td>
+                        </tr>
+                    `}).join('');
+                }
+
+                // 2. Fetch Unique Locations and Populate Filter
+                const resLocs = await fetch("/admin/locations", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const uniqueLocs = await resLocs.json();
+                if (Array.isArray(uniqueLocs)) {
+                    const locSelect = document.getElementById('locationSelect');
+                    uniqueLocs.forEach(loc => {
+                        const opt = document.createElement('option');
+                        opt.value = loc;
+                        opt.textContent = loc;
+                        locSelect.appendChild(opt);
+                    });
+                }
+
+                // 3. Initial Load for All Charts
+                updateFilteredCharts();
+
+                // 4. Fetch User Stats
+                const resUsers = await fetch("/admin/users", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const userData = await resUsers.json();
+                const tbody = document.getElementById('userTableBody');
+                tbody.innerHTML = userData.map(u => `
+                    <tr class="border-b border-slate-50 dark:border-slate-800/40 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-all">
+                        <td class="py-4 font-semibold text-slate-800 dark:text-white">${u.username}</td>
+                        <td class="py-4 text-slate-500 dark:text-slate-400">${u.email || '-'}</td>
+                        <td class="py-4"><span class="px-3 py-1 bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold uppercase">${u.role}</span></td>
+                        <td class="py-4 font-medium text-slate-700 dark:text-slate-300">${u.record_count}</td>
+                    </tr>
+                `).join('');
+
+            } catch (err) { console.error("Analytics load error:", err); }
+        }
+
+        initAnalytics();
+    </script>
+</body>
+</html>

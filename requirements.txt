@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+mysql-connector-python
+python-dotenv
+python-multipart
+PyJWT
+passlib[bcrypt]
+bcrypt==3.2.0
+pytest
+httpx

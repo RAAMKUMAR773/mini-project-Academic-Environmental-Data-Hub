@@ -1,0 +1,36 @@
+2026-03-09 16:13:02,375 [ERROR] Login error: hash could not be identified
+2026-03-09 16:13:09,517 [ERROR] Login error: hash could not be identified
+2026-03-09 16:13:21,653 [ERROR] Login error: hash could not be identified
+2026-03-09 16:14:33,048 [ERROR] Login error: hash could not be identified
+2026-03-09 16:15:24,922 [ERROR] Login error: hash could not be identified
+2026-03-09 16:16:30,640 [ERROR] Login error: hash could not be identified
+2026-03-09 16:17:04,451 [ERROR] Registration error: 400: Username or email already registered
+2026-03-09 16:17:56,708 [ERROR] Registration error: 400: Username or email already registered
+2026-03-09 16:18:43,300 [ERROR] Login error: hash could not be identified
+2026-03-09 16:19:20,845 [ERROR] Login error: hash could not be identified
+2026-03-09 16:19:30,978 [ERROR] Login error: hash could not be identified
+2026-03-10 09:25:52,176 [ERROR] Login error: hash could not be identified
+2026-03-10 09:26:56,146 [ERROR] Login error: hash could not be identified
+2026-03-10 14:35:16,433 [WARNING] (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\raamk\academic-environmental-data-hub\backend\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-10 14:35:16,474 [ERROR] Login error: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-03-10 14:35:19,639 [WARNING] (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\raamk\academic-environmental-data-hub\backend\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-10 14:35:19,655 [ERROR] Login error: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-03-10 14:35:33,610 [WARNING] (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\raamk\academic-environmental-data-hub\backend\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-10 14:35:33,617 [ERROR] Login error: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2026-03-26 11:15:30,414 [ERROR] Login error: 400: Incorrect username or password
+2026-03-26 11:15:41,225 [ERROR] Login error: 400: Incorrect username or password
+2026-03-26 12:09:15,187 [ERROR] Login error: 400: Incorrect username or password
+2026-03-26 12:09:59,384 [ERROR] Registration error: 400: Username or email already registered
+2026-03-26 12:11:56,890 [ERROR] Login error: 400: Incorrect username or password

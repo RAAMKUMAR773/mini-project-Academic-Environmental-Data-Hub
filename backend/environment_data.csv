@@ -1,4 +1,10 @@
-ID,Date,Temperature,Humidity,AQI,Pollution Level
-1,2026-02-06,30.0,60.0,100,Moderate
-2,2025-02-07,27.0,56.0,99,Moderate
-3,2024-11-20,30.0,67.0,98,Moderate
+Date,Temperature,Humidity,AQI,Pollution Level,Location,Created By
+2026-03-07,25.0,55.0,30,Good,Campus North,admin
+2026-03-07,25.0,55.0,30,Good,Campus North,admin
+2026-03-07,25.0,55.0,30,Good,Campus North,admin
+2026-03-07,25.0,55.0,30,Good,Campus North,admin
+2026-03-07,25.0,55.0,30,Good,Campus North,admin
+2026-03-07,25.0,55.0,30,Good,Campus North,admin
+2026-03-07,25.0,55.0,30,Good,Campus North,admin
+2026-03-11,22.0,60.0,45,Good,AS BLOCK,admin
+2026-03-11,29.0,69.0,47,Good,AS BLOCK,admin

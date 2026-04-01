@@ -1,156 +1,285 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Environmental Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-*{box-sizing:border-box;font-family:Segoe UI,Arial}
-body{margin:0;display:flex;background:#eef1f5}
-
-/* Sidebar */
-.sidebar{
-width:240px;
-background:#1f2937;
-color:white;
-height:100vh;
-padding:25px 20px;
-}
-.sidebar h2{margin-bottom:30px}
-.sidebar a{
-display:block;
-padding:12px;
-color:#d1d5db;
-text-decoration:none;
-margin-bottom:12px;
-border-radius:8px;
-transition:.3s;
-}
-.sidebar a:hover{background:#374151;color:white}
-
-/* Content */
-.content{
-flex:1;
-padding:35px;
-}
-
-.header{
-font-size:26px;
-font-weight:600;
-margin-bottom:20px;
-color:#111827;
-}
-
-/* KPI Cards */
-.cards{
-display:flex;
-gap:20px;
-margin-bottom:25px;
-}
-.card{
-background:white;
-padding:20px;
-flex:1;
-border-radius:14px;
-box-shadow:0 4px 18px rgba(0,0,0,.08);
-text-align:center;
-}
-.card h3{margin:0;color:#6b7280}
-.card p{font-size:24px;font-weight:600;margin-top:8px}
-
-/* Charts */
-.chart-container{
-background:white;
-padding:25px;
-border-radius:14px;
-box-shadow:0 4px 18px rgba(0,0,0,.08);
-margin-bottom:25px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background: #f8fafc; transition: background 0.3s ease; }
+        .dark body { background: #0f172a; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .sidebar-item-active {
+            background: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            border-right: 4px solid #2563eb;
+        }
+    </style>
 </head>
+<body class="flex min-h-screen dark:text-slate-100">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-colors">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-10">
+                <div id="sidebarIcon" class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                    <svg width="24" height="24" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <span id="sidebarTitle" class="font-bold text-xl text-slate-800 dark:text-white">EnvHub</span>
+            </div>
+            
+            <nav class="space-y-2" id="navLinks">
+                <a href="dashboard.html" class="flex items-center gap-3 p-3 rounded-xl sidebar-item-active font-medium transition-all">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    Dashboard
+                </a>
+                <a href="add_data.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Add Data
+                </a>
+                <a href="view_data.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-white transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    View Data
+                </a>
+            </nav>
+        </div>
 
-<body>
+        <div class="mt-auto p-8 space-y-4">
+            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all font-medium">
+                <svg id="sunIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.364 6.364l.707.707M6.343 6.343l.707.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moonIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <span class="dark:hidden">Dark Mode</span>
+                <span class="hidden dark:block">Light Mode</span>
+            </button>
+            <button onclick="logout()" class="flex items-center gap-3 w-full p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all font-medium">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
 
-<div class="sidebar">
-<h2>Env Dashboard</h2>
-<a href="dashboard.html">Dashboard</a>
-<a href="add_data.html">Add Data</a>
-<a href="view_data.html">View Data</a>
-</div>
+    <!-- Main Content -->
+    <main class="flex-1 p-10 overflow-y-auto">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-800">Environmental Insights</h2>
+                <p class="text-slate-500" id="subHeader">Real-time monitoring and analytics</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="font-semibold text-slate-800 dark:text-white" id="userDisplay">Loading...</p>
+                    <p class="text-xs text-blue-600 dark:text-blue-400 font-medium uppercase" id="roleDisplay">SYSTEM ACTIVE</p>
+                </div>
+                <div class="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-2xl"></div>
+            </div>
+        </header>
 
-<div class="content">
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="glass-card p-6 rounded-3xl shadow-sm transition-all hover:shadow-md">
+                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Avg Temperature</p>
+                <h3 class="text-3xl font-bold text-slate-800 dark:text-white" id="avgTemp">--°C</h3>
+                <div class="mt-2 text-xs text-orange-500 font-medium">+2.4% from last week</div>
+            </div>
+            <div class="glass-card p-6 rounded-3xl shadow-sm transition-all hover:shadow-md">
+                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Avg Humidity</p>
+                <h3 class="text-3xl font-bold text-slate-800 dark:text-white" id="avgHumidity">--%</h3>
+                <div class="mt-2 text-xs text-blue-500 font-medium">-1.2% from last week</div>
+            </div>
+            <div class="glass-card p-6 rounded-3xl shadow-sm transition-all hover:shadow-md">
+                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Avg AQI</p>
+                <h3 class="text-3xl font-bold text-slate-800 dark:text-white" id="avgAqi">--</h3>
+                <div id="aqiBadge" class="mt-2 inline-block px-2 py-1 rounded-lg text-[10px] font-bold uppercase">Pending</div>
+            </div>
+        </div>
 
-<div class="header">Environmental Monitoring Dashboard</div>
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
+                <h4 class="font-bold text-slate-800 dark:text-white mb-6">Temperature Trends</h4>
+                <canvas id="tempChart" height="200"></canvas>
+            </div>
+            <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
+                <h4 class="font-bold text-slate-800 dark:text-white mb-6">Humidity Distribution</h4>
+                <canvas id="humidityChart" height="200"></canvas>
+            </div>
+            <div class="bg-white dark:bg-slate-800/50 p-8 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 lg:col-span-2 transition-colors">
+                <h4 class="font-bold text-slate-800 dark:text-white mb-6">Air Quality Index (AQI) Analysis</h4>
+                <canvas id="aqiChart" height="100"></canvas>
+            </div>
+        </div>
+    </main>
 
-<div class="cards">
-<div class="card">
-<h3>Avg Temperature</h3>
-<p id="avgTemp">--</p>
-</div>
+    <script>
+        // Check Auth
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "/";
+        
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.role === 'admin') {
+            document.title = "Admin Panel | Dashboard";
+            document.getElementById('sidebarTitle').innerText = "Admin";
+            document.getElementById('sidebarIcon').innerHTML = `<svg width="24" height="24" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>`;
+            
+            const nav = document.getElementById('navLinks');
+            const adminLink = document.createElement('a');
+            adminLink.href = "admin_analytics.html";
+            adminLink.className = "flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium";
+            adminLink.innerHTML = `<svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>Analytics`;
+            nav.appendChild(adminLink);
 
-<div class="card">
-<h3>Avg Humidity</h3>
-<p id="avgHumidity">--</p>
-</div>
+            const userLink = document.createElement('a');
+            userLink.href = "admin_users.html";
+            userLink.className = "flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium";
+            userLink.innerHTML = `<svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>Manage User Details`;
+            nav.appendChild(userLink);
+        }
 
-<div class="card">
-<h3>Avg AQI</h3>
-<p id="avgAqi">--</p>
-</div>
-</div>
+        document.getElementById("userDisplay").innerText = payload.sub;
+        document.getElementById("roleDisplay").innerText = payload.role + " ACTIVE";
+        
+        if (payload.role !== 'admin') {
+            document.getElementById("subHeader").innerText = "Your environmental contributions and monitoring";
+        }
 
-<div class="chart-container">
-<canvas id="tempChart"></canvas>
-</div>
 
-<div class="chart-container">
-<canvas id="humidityChart"></canvas>
-</div>
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        }
 
-<div class="chart-container">
-<canvas id="aqiChart"></canvas>
-</div>
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
 
-</div>
+        async function fetchData() {
+            try {
+                const response = await fetch("/view-data", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const data = await response.json();
 
-<script>
-fetch("http://127.0.0.1:8000/view-data")
-.then(response => response.json())
-.then(data => {
+                if (!Array.isArray(data) || data.length === 0) return;
 
-const dates = data.map(r => r.date);
-const temp = data.map(r => r.temperature);
-const humidity = data.map(r => r.humidity);
-const aqi = data.map(r => r.aqi);
+                const dates = data.map(r => r.date);
+                const temp = data.map(r => r.temperature);
+                const humidity = data.map(r => r.humidity);
+                const aqi = data.map(r => r.aqi);
 
-/* KPI calculation */
-document.getElementById("avgTemp").innerText =
-(temp.reduce((a,b)=>a+b,0)/temp.length).toFixed(2);
+                /* KPI calculation */
+                const avgT = (temp.reduce((a,b)=>a+b,0)/temp.length).toFixed(1);
+                const avgH = (humidity.reduce((a,b)=>a+b,0)/humidity.length).toFixed(1);
+                const avgA = Math.round(aqi.reduce((a,b)=>a+b,0)/aqi.length);
 
-document.getElementById("avgHumidity").innerText =
-(humidity.reduce((a,b)=>a+b,0)/humidity.length).toFixed(2);
+                document.getElementById("avgTemp").innerText = avgT + "°C";
+                document.getElementById("avgHumidity").innerText = avgH + "%";
+                document.getElementById("avgAqi").innerText = avgA;
 
-document.getElementById("avgAqi").innerText =
-(aqi.reduce((a,b)=>a+b,0)/aqi.length).toFixed(2);
+                const badge = document.getElementById("aqiBadge");
+                if(avgA < 50) {
+                    badge.innerText = "Excellent";
+                    badge.classList.add("bg-green-100", "text-green-600");
+                } else if(avgA < 100) {
+                    badge.innerText = "Moderate";
+                    badge.classList.add("bg-yellow-100", "text-yellow-600");
+                } else {
+                    badge.innerText = "Poor";
+                    badge.classList.add("bg-red-100", "text-red-600");
+                }
 
-/* Charts */
-new Chart(document.getElementById("tempChart"), {
-type: "line",
-data: {labels: dates,datasets:[{label:"Temperature",data: temp}]}
-});
+                /* Chart Config */
+                const chartOptions = {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        y: { border: { display: false }, grid: { color: "#f1f5f9" } },
+                        x: { border: { display: false }, grid: { display: false } }
+                    }
+                };
 
-new Chart(document.getElementById("humidityChart"), {
-type: "bar",
-data: {labels: dates,datasets:[{label:"Humidity",data: humidity}]}
-});
+                new Chart(document.getElementById("tempChart"), {
+                    type: "line",
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: "Temp",
+                            data: temp,
+                            borderColor: "#f97316",
+                            backgroundColor: "rgba(249, 115, 22, 0.1)",
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: chartOptions
+                });
 
-new Chart(document.getElementById("aqiChart"), {
-type: "line",
-data: {labels: dates,datasets:[{label:"AQI",data: aqi}]}
-});
+                new Chart(document.getElementById("humidityChart"), {
+                    type: "bar",
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: "Humidity",
+                            data: humidity,
+                            backgroundColor: "#3b82f6",
+                            borderRadius: 8
+                        }]
+                    },
+                    options: chartOptions
+                });
 
-});
-</script>
+                new Chart(document.getElementById("aqiChart"), {
+                    type: "line",
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: "AQI",
+                            data: aqi,
+                            borderColor: "#8b5cf6",
+                            backgroundColor: "rgba(139, 92, 246, 0.1)",
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointBackgroundColor: "#fff"
+                        }]
+                    },
+                    options: chartOptions
+                });
 
+            } catch (err) {
+                console.error("Fetch error:", err);
+            }
+        }
+
+        fetchData();
+    </script>
 </body>
 </html>
+

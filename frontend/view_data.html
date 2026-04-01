@@ -1,173 +1,394 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>View Environmental Data</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Data | Environmental Data Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background: #f8fafc; transition: background 0.3s ease; }
+        .dark body { background: #0f172a; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-<style>
-*{box-sizing:border-box;font-family:Segoe UI,Arial}
-body{margin:0;display:flex;background:#eef1f5}
-
-/* Sidebar */
-.sidebar{
-width:240px;
-background:#1f2937;
-color:white;
-height:100vh;
-padding:25px 20px;
-}
-.sidebar h2{margin-bottom:30px}
-.sidebar a{
-display:block;
-padding:12px;
-color:#d1d5db;
-text-decoration:none;
-margin-bottom:12px;
-border-radius:8px;
-transition:.3s;
-}
-.sidebar a:hover{background:#374151;color:white}
-
-/* Content */
-.content{
-flex:1;
-padding:35px;
-}
-
-.header{
-font-size:26px;
-font-weight:600;
-margin-bottom:20px;
-color:#111827;
-}
-
-.card{
-background:white;
-padding:25px;
-border-radius:14px;
-box-shadow:0 4px 18px rgba(0,0,0,.08);
-}
-
-/* Controls */
-.controls{
-display:flex;
-justify-content:space-between;
-margin-bottom:15px;
-}
-
-input{
-padding:10px;
-border:1px solid #d1d5db;
-border-radius:8px;
-width:250px;
-}
-
-button{
-padding:10px 15px;
-border:none;
-background:#2563eb;
-color:white;
-border-radius:8px;
-cursor:pointer;
-margin-left:8px;
-}
-button:hover{background:#1e40af}
-
-/* Table */
-table{
-width:100%;
-border-collapse:collapse;
-}
-th{
-background:#f3f4f6;
-padding:12px;
-text-align:center;
-}
-td{
-padding:10px;
-text-align:center;
-border-top:1px solid #e5e7eb;
-}
-</style>
+        @media print {
+            aside, header, #searchBox, .text-slate-400, .py-2 {
+                display: none !important;
+            }
+            /* Hide only the Actions column specifically */
+            th:last-child, td:last-child {
+                display: none !important;
+            }
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .bg-white, .dark\:bg-slate-800\/50 {
+                background: white !important;
+                color: black !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th, td {
+                border-bottom: 1px solid #ddd !important;
+                color: black !important;
+                padding: 8px !important;
+            }
+            /* Show the table and important headers */
+            #dataTable {
+                display: table !important;
+            }
+            th:last-child, td:last-child {
+                display: none !important;
+            }
+            /* Ensure the print content is visible */
+            body {
+                background: white !important;
+                color: black !important;
+            }
+        }
+    </style>
 </head>
+<body class="flex min-h-screen dark:text-slate-100">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-colors">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-10">
+                <div id="sidebarIcon" class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                    <svg width="24" height="24" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <span id="sidebarTitle" class="font-bold text-xl text-slate-800 dark:text-white">EnvHub</span>
+            </div>
+            
+            <nav class="space-y-2" id="navLinks">
+                <a href="dashboard.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    Dashboard
+                </a>
+                <a href="add_data.html" class="flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Add Data
+                </a>
+                <a href="view_data.html" class="flex items-center gap-3 p-3 rounded-xl bg-blue-50 text-blue-600 border-r-4 border-blue-600 font-medium transition-all">
+                    <svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    View Data
+                </a>
+            </nav>
+        </div>
 
-<body>
+        <div class="mt-auto p-8 space-y-4">
+            <button onclick="toggleTheme()" class="flex items-center gap-3 w-full p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all font-medium">
+                <svg id="sunIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.364 6.364l.707.707M6.343 6.343l.707.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moonIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <span class="dark:hidden">Dark Mode</span>
+                <span class="hidden dark:block">Light Mode</span>
+            </button>
+            <button onclick="logout()" class="flex items-center gap-3 w-full p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all font-medium">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
 
-<div class="sidebar">
-<h2>Env Dashboard</h2>
-<a href="dashboard.html">Dashboard</a>
-<a href="add_data.html">Add Data</a>
-<a href="view_data.html">View Data</a>
-</div>
+    <!-- Main Content -->
+    <main class="flex-1 p-10 overflow-y-auto">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-white">Historical Data</h2>
+                <p class="text-slate-500 dark:text-slate-400">Comprehensive list of environmental records</p>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="downloadCSV()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-all inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Export CSV
+                </button>
+                <button onclick="window.print()" class="bg-slate-800 dark:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold hover:bg-slate-700 dark:hover:bg-blue-500 transition-all inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Print Report
+                </button>
+            </div>
+        </header>
 
-<div class="content">
+        <div class="bg-white dark:bg-slate-800/50 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden transition-colors">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
+                <div class="relative w-80">
+                    <input type="text" id="searchBox" placeholder="Search records..." 
+                        class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all">
+                    <svg class="w-5 h-5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <div class="text-sm text-slate-400 dark:text-slate-500">Showing <span id="recordCount" class="font-medium text-slate-800 dark:text-white">0</span> records</div>
+            </div>
 
-<div class="header">Environmental Data Records</div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left" id="dataTable">
+                    <thead>
+                        <tr class="bg-slate-50/80 dark:bg-slate-900/80 text-slate-500 dark:text-slate-400 uppercase text-[10px] font-bold tracking-wider" id="tableHeader">
+                            <th class="px-6 py-4">ID</th>
+                            <th class="px-6 py-4">Date</th>
+                            <th class="px-6 py-4">Temp (°C)</th>
+                            <th class="px-6 py-4">Humidity (%)</th>
+                            <th class="px-6 py-4">AQI</th>
+                            <th class="px-6 py-4">Pollution Level</th>
+                            <th class="px-6 py-4">Location</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <!-- Rows will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<div class="card">
+        <!-- Edit Modal -->
+        <div id="editModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl transition-colors">
+                <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">Edit Record</h3>
+                <form id="editForm" class="space-y-4">
+                    <input type="hidden" id="edit_id">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-1">Date</label>
+                        <input type="date" id="edit_date" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-1">Temp (°C)</label>
+                            <input type="number" step="0.1" id="edit_temp" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-1">Humidity (%)</label>
+                            <input type="number" step="0.1" id="edit_humidity" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-1">AQI</label>
+                        <input type="number" id="edit_aqi" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-1">Location</label>
+                        <input type="text" id="edit_location" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-1">Pollution Level</label>
+                        <select id="edit_pollution" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium">
+                            <option value="Good">Good</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Unhealthy">Unhealthy</option>
+                            <option value="Hazardous">Hazardous</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-4 mt-8">
+                        <button type="button" onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">Cancel</button>
+                        <button type="submit" class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/10">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 
-<div class="controls">
-<input type="text" id="searchBox" placeholder="Search...">
-<div>
-<button onclick="downloadCSV()">Download CSV</button>
-<button onclick="window.print()">Download PDF</button>
-</div>
-</div>
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "/";
+        
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const isAdmin = payload.role === 'admin';
 
-<table id="dataTable">
-<thead>
-<tr>
-<th>ID</th>
-<th>Date</th>
-<th>Temperature</th>
-<th>Humidity</th>
-<th>AQI</th>
-<th>Pollution Level</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+        if (isAdmin) {
+            document.title = "Admin Panel | View Data";
+            document.getElementById('sidebarTitle').innerText = "Admin";
+            document.getElementById('sidebarIcon').innerHTML = `<svg width="24" height="24" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>`;
+            
+            const nav = document.getElementById('navLinks');
+            const adminLink = document.createElement('a');
+            adminLink.href = "admin_analytics.html";
+            adminLink.className = "flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium";
+            adminLink.innerHTML = `<svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>Analytics`;
+            nav.appendChild(adminLink);
 
-</div>
-</div>
+            const userLink = document.createElement('a');
+            userLink.href = "admin_users.html";
+            userLink.className = "flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all font-medium";
+            userLink.innerHTML = `<svg width="20" height="20" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>Manage User Details`;
+            nav.appendChild(userLink);
 
-<script>
-let allData=[];
+            const header = document.getElementById('tableHeader');
+            const th = document.createElement('th');
+            th.className = "px-6 py-4 text-right";
+            th.innerText = "Created By";
+            // Insert before the last child (Actions)
+            header.insertBefore(th, header.lastElementChild);
+        }
 
-fetch("http://127.0.0.1:8000/view-data")
-.then(r=>r.json())
-.then(data=>{
-allData=data;
-renderTable(data);
-});
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+        }
 
-function renderTable(data){
-const tb=document.querySelector("#dataTable tbody");
-tb.innerHTML="";
-data.forEach(row=>{
-tb.innerHTML+=`<tr>
-<td>${row.id}</td>
-<td>${row.date}</td>
-<td>${row.temperature}</td>
-<td>${row.humidity}</td>
-<td>${row.aqi}</td>
-<td>${row.pollution_level}</td>
-</tr>`;
-});
-}
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
 
-/* Search filter */
-document.getElementById("searchBox").addEventListener("keyup",function(){
-const val=this.value.toLowerCase();
-const filtered=allData.filter(r=>
-Object.values(r).join(" ").toLowerCase().includes(val)
-);
-renderTable(filtered);
-});
+        let allData=[];
 
-function downloadCSV(){
-window.open("http://127.0.0.1:8000/download-csv");
-}
-</script>
+        fetch("/view-data", {
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        .then(r=>r.json())
+        .then(data=>{
+            allData=data;
+            renderTable(data);
+        });
 
+        function renderTable(data){
+            const tb=document.querySelector("#dataTable tbody");
+            const countDisp = document.getElementById("recordCount");
+            tb.innerHTML="";
+            countDisp.innerText = data.length;
+
+            data.forEach(row=>{
+                const badgeColor = row.pollution_level === 'Good' ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400' : 
+                                  row.pollution_level === 'Moderate' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/40 dark:text-yellow-300' : 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400';
+                
+                let rowHtml = `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-b border-slate-100 dark:border-slate-800">
+                    <td class="px-6 py-4 text-slate-500 dark:text-slate-400 font-medium font-mono text-sm">#${row.id}</td>
+                    <td class="px-6 py-4 text-slate-800 dark:text-slate-100 font-semibold">${row.date}</td>
+                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${row.temperature}°C</td>
+                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">${row.humidity}%</td>
+                    <td class="px-6 py-4">
+                        <span class="bg-slate-100 dark:bg-slate-900/50 px-2 py-1 rounded text-slate-700 dark:text-slate-300 font-bold text-xs">${row.aqi}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="${badgeColor} px-2 py-1 rounded-lg text-[10px] font-bold uppercase">${row.pollution_level}</span>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300 text-sm">${row.location || '-'}</td>`;
+                
+                if (isAdmin) {
+                    rowHtml += `<td class="px-6 py-4 text-right text-slate-500 font-medium">${row.created_by || 'admin'}</td>`;
+                }
+                
+                rowHtml += `<td class="px-6 py-4 text-right space-x-2">
+                    <button onclick="editRecord(${row.id})" class="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all">
+                        <svg width="18" height="18" class="inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </button>
+                    <button onclick="deleteRecord(${row.id})" class="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all">
+                        <svg width="18" height="18" class="inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </td>`;
+                
+                rowHtml += `</tr>`;
+                tb.innerHTML += rowHtml;
+            });
+        }
+
+        document.getElementById("searchBox").addEventListener("keyup",function(){
+            const val=this.value.toLowerCase();
+            const filtered=allData.filter(r=>
+                Object.values(r).join(" ").toLowerCase().includes(val)
+            );
+            renderTable(filtered);
+        });
+
+        function downloadCSV(){
+            window.open("/download-csv");
+        }
+
+        function editRecord(id) {
+            const record = allData.find(r => r.id === id);
+            if (!record) return;
+
+            document.getElementById('edit_id').value = record.id;
+            document.getElementById('edit_date').value = record.date;
+            document.getElementById('edit_temp').value = record.temperature;
+            document.getElementById('edit_humidity').value = record.humidity;
+            document.getElementById('edit_aqi').value = record.aqi;
+            document.getElementById('edit_location').value = record.location;
+            document.getElementById('edit_pollution').value = record.pollution_level;
+
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        document.getElementById('editForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit_id').value;
+            const data = {
+                date: document.getElementById('edit_date').value,
+                temperature: parseFloat(document.getElementById('edit_temp').value),
+                humidity: parseFloat(document.getElementById('edit_humidity').value),
+                aqi: parseInt(document.getElementById('edit_aqi').value),
+                location: document.getElementById('edit_location').value,
+                pollution_level: document.getElementById('edit_pollution').value
+            };
+
+            try {
+                const response = await fetch(`/edit-data/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('editModal').classList.add('hidden');
+                    location.reload();
+                } else {
+                    const err = await response.json();
+                    alert(err.detail || "Failed to update record");
+                }
+            } catch (err) {
+                alert("Server error");
+            }
+        };
+
+        async function deleteRecord(id) {
+            if (!confirm("Are you sure you want to delete this record?")) return;
+            
+            try {
+                const response = await fetch(`/delete-data/${id}`, {
+                    method: 'DELETE',
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    const err = await response.json();
+                    alert(err.detail || "Failed to delete record");
+                }
+            } catch (err) {
+                alert("Server error");
+            }
+        }
+    </script>
 </body>
 </html>
+
