@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Environmental Data Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
     </script>
@@ -97,13 +97,17 @@
             const p = document.getElementById("password").value;
 
             try {
-                const formData = new FormData();
-                formData.append("username", u);
-                formData.append("password", p);
+                // OAuth2PasswordRequestForm expects application/x-www-form-urlencoded
+                const params = new URLSearchParams();
+                params.append("username", u);
+                params.append("password", p);
 
                 const response = await fetch("/api/login", {
                     method: "POST",
-                    body: formData
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: params
                 });
 
                 if (response.ok) {
