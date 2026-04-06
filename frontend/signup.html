@@ -80,7 +80,7 @@
 
         <p class="mt-8 text-center text-slate-500 dark:text-blue-200/60 text-sm">
             Already have an account? 
-            <a href="/" class="text-blue-600 dark:text-blue-400 font-bold hover:text-blue-500 transition-colors">Log In</a>
+            <a href="login.html" class="text-blue-600 dark:text-blue-400 font-bold hover:text-blue-500 transition-colors">Log In</a>
         </p>
     </div>
 
@@ -102,7 +102,7 @@
             const password = document.getElementById("password").value;
 
             try {
-                const response = await fetch("/register", {
+                const response = await fetch("/api/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, email, password })
@@ -110,7 +110,7 @@
 
                 if (response.ok) {
                     alert("Registration successful! Please log in.");
-                    window.location.href = "/";
+                    window.location.href = "login.html";
                 } else {
                     const error = await response.json();
                     alert(error.detail || "Registration failed");

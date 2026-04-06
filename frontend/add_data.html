@@ -145,7 +145,7 @@
 
     <script>
         const token = localStorage.getItem("token");
-        if (!token) window.location.href = "/";
+        if (!token) window.location.href = "login.html";
         
         const payload = JSON.parse(atob(token.split('.')[1]));
         if (payload.role === 'admin') {
@@ -169,7 +169,7 @@
 
         function logout() {
             localStorage.removeItem("token");
-            window.location.href = "/";
+            window.location.href = "login.html";
         }
 
         function toggleTheme() {
@@ -206,7 +206,7 @@
             };
 
             try {
-                const response = await fetch(`/add-data`, {
+                const response = await fetch(`/api/add-data`, {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${token}`,
@@ -236,7 +236,7 @@
             formData.append("file", file);
 
             try {
-                const response = await fetch("/upload-csv", {
+                const response = await fetch("/api/upload-csv", {
                     method: "POST",
                     headers: { "Authorization": `Bearer ${token}` },
                     body: formData

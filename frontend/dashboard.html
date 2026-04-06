@@ -132,7 +132,7 @@
     <script>
         // Check Auth
         const token = localStorage.getItem("token");
-        if (!token) window.location.href = "/";
+        if (!token) window.location.href = "login.html";
         
         const payload = JSON.parse(atob(token.split('.')[1]));
         if (payload.role === 'admin') {
@@ -164,7 +164,7 @@
 
         function logout() {
             localStorage.removeItem("token");
-            window.location.href = "/";
+            window.location.href = "login.html";
         }
 
         function toggleTheme() {
@@ -179,7 +179,7 @@
 
         async function fetchData() {
             try {
-                const response = await fetch("/view-data", {
+                const response = await fetch("/api/view-data", {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 const data = await response.json();

@@ -172,14 +172,14 @@
 
     <script>
         const token = localStorage.getItem("token");
-        if (!token) window.location.href = "/";
+        if (!token) window.location.href = "login.html";
         
         const payload = JSON.parse(atob(token.split('.')[1]));
         if (payload.role !== 'admin') window.location.href = "dashboard.html";
 
         function logout() {
             localStorage.removeItem("token");
-            window.location.href = "/";
+            window.location.href = "login.html";
         }
 
         function toggleTheme() {
@@ -224,7 +224,7 @@
             }
             
             // 1. Update Monthly Trends
-            const resTrend = await fetch(`/admin/analytics${locParam}`, {
+            const resTrend = await fetch(`/api/admin/analytics${locParam}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const trendData = await resTrend.json();
@@ -261,7 +261,7 @@
             }
 
             // 2. Update Pollution Distribution
-            const resDist = await fetch(`/admin/trends/pollution-dist${locParam}`, {
+            const resDist = await fetch(`/api/admin/trends/pollution-dist${locParam}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const distData = await resDist.json();
@@ -288,7 +288,7 @@
             }
 
             // 3. Update Temp vs Humidity Correlation
-            const resCorr = await fetch(`/admin/trends/temp-hum-correlation${locParam}`, {
+            const resCorr = await fetch(`/api/admin/trends/temp-hum-correlation${locParam}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const corrData = await resCorr.json();
@@ -323,7 +323,7 @@
         async function initAnalytics() {
             try {
                 // 1. Fetch Location Data (Table & Cache)
-                const resLoc = await fetch("/admin/location-analytics", {
+                const resLoc = await fetch("/api/admin/location-analytics", {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 locationCache = await resLoc.json();
@@ -348,7 +348,7 @@
                 }
 
                 // 2. Fetch Unique Locations and Populate Filter
-                const resLocs = await fetch("/admin/locations", {
+                const resLocs = await fetch("/api/admin/locations", {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 const uniqueLocs = await resLocs.json();
@@ -366,7 +366,7 @@
                 updateFilteredCharts();
 
                 // 4. Fetch User Stats
-                const resUsers = await fetch("/admin/users", {
+                const resUsers = await fetch("/api/admin/users", {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
                 const userData = await resUsers.json();

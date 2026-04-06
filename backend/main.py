@@ -28,7 +28,12 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-app = FastAPI(title="Academic Environmental Data Hub")
+# Check if running on Vercel
+is_vercel = os.environ.get("VERCEL") == "1"
+app = FastAPI(
+    title="Academic Environmental Data Hub",
+    root_path="/api" if is_vercel else ""
+)
 
 # Password hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
