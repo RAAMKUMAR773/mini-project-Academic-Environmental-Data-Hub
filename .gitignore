@@ -1,3 +1,22 @@
+# Virtual Environment
 venv/
+
+# Environment Variables
 .env
+backend/.env
+
+# Python Cache
 __pycache__/
+*.pyc
+
+# Database Setup Scripts (Contains Schema/Sensitive SQL)
+supabase_setup.sql
+setup_db.py
+
+# Logs
+api.log
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
