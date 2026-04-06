@@ -59,8 +59,12 @@ app.add_middleware(
 )
 
 # Serve Frontend Static Files
-# Mount the frontend directory. 'html=True' will automatically serve index.html or login.html if requested
-app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
+# Only mount locally; Vercel handles static files via vercel.json rewrites
+if not is_vercel:
+    try:
+        app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
+    except Exception as e:
+        logger.warning(f"Could not mount /frontend directory: {e}")
 
 @app.get("/health")
 async def health_check():
