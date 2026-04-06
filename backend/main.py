@@ -62,6 +62,27 @@ app.add_middleware(
 # Mount the frontend directory. 'html=True' will automatically serve index.html or login.html if requested
 app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
 
+@app.get("/health")
+async def health_check():
+    health = {"status": "ok", "database": "unknown"}
+    conn = None
+    try:
+        conn = get_connection()
+        if conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
+                health["database"] = "connected"
+        else:
+            health["database"] = "pool_error"
+            health["status"] = "error"
+    except Exception as e:
+        health["database"] = f"connection_failed: {str(e)}"
+        health["status"] = "error"
+    finally:
+        if conn:
+            release_connection(conn)
+    return health
+
 
 # Models
 class DataPoint(BaseModel):
