@@ -8,3 +8,13 @@ Date,Temperature,Humidity,AQI,Pollution Level,Location,Created By
 2026-03-07,25.0,55.0,30,Good,Campus North,admin
 2026-03-11,22.0,60.0,45,Good,AS BLOCK,admin
 2026-03-11,29.0,69.0,47,Good,AS BLOCK,admin
+2026-04-01,27.0,60.0,52,Good,Test Lab A,test_student_a
+2026-04-02,22.0,55.0,40,Good,Test Lab B,test_student_b
+2026-04-02,23.0,55.0,41,Good,Test Lab B,test_student_b
+2026-04-01,25.0,60.0,50,Good,Test Lab A,test_student_a
+2026-04-01,26.0,60.0,51,Good,Test Lab A,test_student_a
+2026-04-01,27.0,60.0,52,Good,Test Lab A,test_student_a
+2026-04-02,22.0,55.0,40,Good,Test Lab B,test_student_b
+2026-04-02,23.0,55.0,41,Good,Test Lab B,test_student_b
+2026-04-05,25.0,45.0,30,Good,Chemistry Lab,test_qa_student_2
+2026-04-05,24.0,50.0,40,Good,Physics Workshop,test_qa_student_2

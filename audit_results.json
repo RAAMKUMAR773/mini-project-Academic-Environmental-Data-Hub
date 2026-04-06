@@ -1,0 +1,1078 @@
+[
+    {
+        "name": "Register Student A",
+        "method": "POST",
+        "endpoint": "/register",
+        "actual_status": 201,
+        "expected_status": 201,
+        "status_match": true,
+        "response_time_ms": 302.71,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Registration successful"
+        }
+    },
+    {
+        "name": "Login Student A",
+        "method": "POST",
+        "endpoint": "/login",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 293.14,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X3N0dWRlbnRfYSIsInJvbGUiOiJzdHVkZW50IiwiZXhwIjoxNzc1Mzk0ODg2fQ.iAj-Ljp1NURlntvknK9yjnksVNni4lGkdK9yjLpkPVE",
+            "token_type": "bearer"
+        }
+    },
+    {
+        "name": "Register Student B",
+        "method": "POST",
+        "endpoint": "/register",
+        "actual_status": 201,
+        "expected_status": 201,
+        "status_match": true,
+        "response_time_ms": 332.09,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Registration successful"
+        }
+    },
+    {
+        "name": "Login Student B",
+        "method": "POST",
+        "endpoint": "/login",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 297.67,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X3N0dWRlbnRfYiIsInJvbGUiOiJzdHVkZW50IiwiZXhwIjoxNzc1Mzk0ODg2fQ.k43tvwM1zOCan9oz_SRp2yubpiQf0TBhNkQj7do1BuE",
+            "token_type": "bearer"
+        }
+    },
+    {
+        "name": "Login Admin",
+        "method": "POST",
+        "endpoint": "/login",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 329.78,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc3NTM5NDg4N30.9y7dYA10bX_HMFx90uPl5zc7AWzvbQxnSt1KkHft17k",
+            "token_type": "bearer"
+        }
+    },
+    {
+        "name": "Add Data A-0",
+        "method": "POST",
+        "endpoint": "/add-data",
+        "actual_status": 201,
+        "expected_status": 201,
+        "status_match": true,
+        "response_time_ms": 10.48,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Data inserted successfully"
+        }
+    },
+    {
+        "name": "Add Data A-1",
+        "method": "POST",
+        "endpoint": "/add-data",
+        "actual_status": 201,
+        "expected_status": 201,
+        "status_match": true,
+        "response_time_ms": 22.8,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Data inserted successfully"
+        }
+    },
+    {
+        "name": "Add Data A-2",
+        "method": "POST",
+        "endpoint": "/add-data",
+        "actual_status": 201,
+        "expected_status": 201,
+        "status_match": true,
+        "response_time_ms": 30.09,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Data inserted successfully"
+        }
+    },
+    {
+        "name": "Add Data B-0",
+        "method": "POST",
+        "endpoint": "/add-data",
+        "actual_status": 201,
+        "expected_status": 201,
+        "status_match": true,
+        "response_time_ms": 31.95,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Data inserted successfully"
+        }
+    },
+    {
+        "name": "Add Data B-1",
+        "method": "POST",
+        "endpoint": "/add-data",
+        "actual_status": 201,
+        "expected_status": 201,
+        "status_match": true,
+        "response_time_ms": 29.09,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Data inserted successfully"
+        }
+    },
+    {
+        "name": "View Data (Student A Isolation)",
+        "method": "GET",
+        "endpoint": "/view-data",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 35.48,
+        "body_shape": "<class 'list'>",
+        "body": [
+            {
+                "id": 20,
+                "date": "2026-04-01",
+                "temperature": 26.0,
+                "humidity": 60.0,
+                "aqi": 51,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 21,
+                "date": "2026-04-01",
+                "temperature": 27.0,
+                "humidity": 60.0,
+                "aqi": 52,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 24,
+                "date": "2026-04-01",
+                "temperature": 25.0,
+                "humidity": 60.0,
+                "aqi": 50,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 25,
+                "date": "2026-04-01",
+                "temperature": 26.0,
+                "humidity": 60.0,
+                "aqi": 51,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 26,
+                "date": "2026-04-01",
+                "temperature": 27.0,
+                "humidity": 60.0,
+                "aqi": 52,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            }
+        ]
+    },
+    {
+        "name": "View Data (Admin Visibility)",
+        "method": "GET",
+        "endpoint": "/view-data",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 7.7,
+        "body_shape": "<class 'list'>",
+        "body": [
+            {
+                "id": 10,
+                "date": "2026-03-07",
+                "temperature": 25.0,
+                "humidity": 55.0,
+                "aqi": 30,
+                "pollution_level": "Good",
+                "location": "Campus North",
+                "created_by": "admin"
+            },
+            {
+                "id": 11,
+                "date": "2026-03-07",
+                "temperature": 25.0,
+                "humidity": 55.0,
+                "aqi": 30,
+                "pollution_level": "Good",
+                "location": "Campus North",
+                "created_by": "admin"
+            },
+            {
+                "id": 12,
+                "date": "2026-03-07",
+                "temperature": 25.0,
+                "humidity": 55.0,
+                "aqi": 30,
+                "pollution_level": "Good",
+                "location": "Campus North",
+                "created_by": "admin"
+            },
+            {
+                "id": 13,
+                "date": "2026-03-07",
+                "temperature": 25.0,
+                "humidity": 55.0,
+                "aqi": 30,
+                "pollution_level": "Good",
+                "location": "Campus North",
+                "created_by": "admin"
+            },
+            {
+                "id": 14,
+                "date": "2026-03-07",
+                "temperature": 25.0,
+                "humidity": 55.0,
+                "aqi": 30,
+                "pollution_level": "Good",
+                "location": "Campus North",
+                "created_by": "admin"
+            },
+            {
+                "id": 15,
+                "date": "2026-03-07",
+                "temperature": 25.0,
+                "humidity": 55.0,
+                "aqi": 30,
+                "pollution_level": "Good",
+                "location": "Campus North",
+                "created_by": "admin"
+            },
+            {
+                "id": 16,
+                "date": "2026-03-07",
+                "temperature": 25.0,
+                "humidity": 55.0,
+                "aqi": 30,
+                "pollution_level": "Good",
+                "location": "Campus North",
+                "created_by": "admin"
+            },
+            {
+                "id": 17,
+                "date": "2026-03-11",
+                "temperature": 22.0,
+                "humidity": 60.0,
+                "aqi": 45,
+                "pollution_level": "Good",
+                "location": "AS BLOCK",
+                "created_by": "admin"
+            },
+            {
+                "id": 18,
+                "date": "2026-03-11",
+                "temperature": 29.0,
+                "humidity": 69.0,
+                "aqi": 47,
+                "pollution_level": "Good",
+                "location": "AS BLOCK",
+                "created_by": "admin"
+            },
+            {
+                "id": 20,
+                "date": "2026-04-01",
+                "temperature": 26.0,
+                "humidity": 60.0,
+                "aqi": 51,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 21,
+                "date": "2026-04-01",
+                "temperature": 27.0,
+                "humidity": 60.0,
+                "aqi": 52,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 22,
+                "date": "2026-04-02",
+                "temperature": 22.0,
+                "humidity": 55.0,
+                "aqi": 40,
+                "pollution_level": "Good",
+                "location": "Test Lab B",
+                "created_by": "test_student_b"
+            },
+            {
+                "id": 23,
+                "date": "2026-04-02",
+                "temperature": 23.0,
+                "humidity": 55.0,
+                "aqi": 41,
+                "pollution_level": "Good",
+                "location": "Test Lab B",
+                "created_by": "test_student_b"
+            },
+            {
+                "id": 24,
+                "date": "2026-04-01",
+                "temperature": 25.0,
+                "humidity": 60.0,
+                "aqi": 50,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 25,
+                "date": "2026-04-01",
+                "temperature": 26.0,
+                "humidity": 60.0,
+                "aqi": 51,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 26,
+                "date": "2026-04-01",
+                "temperature": 27.0,
+                "humidity": 60.0,
+                "aqi": 52,
+                "pollution_level": "Good",
+                "location": "Test Lab A",
+                "created_by": "test_student_a"
+            },
+            {
+                "id": 27,
+                "date": "2026-04-02",
+                "temperature": 22.0,
+                "humidity": 55.0,
+                "aqi": 40,
+                "pollution_level": "Good",
+                "location": "Test Lab B",
+                "created_by": "test_student_b"
+            },
+            {
+                "id": 28,
+                "date": "2026-04-02",
+                "temperature": 23.0,
+                "humidity": 55.0,
+                "aqi": 41,
+                "pollution_level": "Good",
+                "location": "Test Lab B",
+                "created_by": "test_student_b"
+            }
+        ]
+    },
+    {
+        "name": "Edit Data (Owner)",
+        "method": "PUT",
+        "endpoint": "/edit-data/20",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 31.75,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Data updated successfully"
+        }
+    },
+    {
+        "name": "Edit Data (Forbidden Cross-User)",
+        "method": "PUT",
+        "endpoint": "/edit-data/20",
+        "actual_status": 403,
+        "expected_status": 403,
+        "status_match": true,
+        "response_time_ms": 27.88,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Not authorized to edit this record"
+        }
+    },
+    {
+        "name": "Edit Data (Admin Override)",
+        "method": "PUT",
+        "endpoint": "/edit-data/20",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 28.34,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Data updated successfully"
+        }
+    },
+    {
+        "name": "Delete Data (Owner)",
+        "method": "DELETE",
+        "endpoint": "/delete-data/20",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 34.9,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "Data deleted successfully"
+        }
+    },
+    {
+        "name": "Download CSV (Public)",
+        "method": "GET",
+        "endpoint": "/download-csv",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 212.04,
+        "body_shape": "<class 'str'>",
+        "body": "Date,Temperature,Humidity,AQI,Pollution Level,Location,Created By\r\n2026-03-07,25.0,55.0,30,Good,Campus North,admin\r\n2026-03-07,25.0,55.0,30,Good,Campus North,admin\r\n2026-03-07,25.0,55.0,30,Good,Campus"
+    },
+    {
+        "name": "Admin Access: /admin/analytics",
+        "method": "GET",
+        "endpoint": "/admin/analytics",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 26.93,
+        "body_shape": "<class 'list'>",
+        "body": [
+            {
+                "date": "2026-03-07",
+                "avg_temp": 25.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 30
+            },
+            {
+                "date": "2026-03-07",
+                "avg_temp": 25.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 30
+            },
+            {
+                "date": "2026-03-07",
+                "avg_temp": 25.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 30
+            },
+            {
+                "date": "2026-03-07",
+                "avg_temp": 25.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 30
+            },
+            {
+                "date": "2026-03-07",
+                "avg_temp": 25.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 30
+            },
+            {
+                "date": "2026-03-07",
+                "avg_temp": 25.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 30
+            },
+            {
+                "date": "2026-03-07",
+                "avg_temp": 25.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 30
+            },
+            {
+                "date": "2026-03-11",
+                "avg_temp": 22.0,
+                "avg_humidity": 60.0,
+                "avg_aqi": 45
+            },
+            {
+                "date": "2026-03-11",
+                "avg_temp": 29.0,
+                "avg_humidity": 69.0,
+                "avg_aqi": 47
+            },
+            {
+                "date": "2026-04-01",
+                "avg_temp": 27.0,
+                "avg_humidity": 60.0,
+                "avg_aqi": 52
+            },
+            {
+                "date": "2026-04-01",
+                "avg_temp": 25.0,
+                "avg_humidity": 60.0,
+                "avg_aqi": 50
+            },
+            {
+                "date": "2026-04-01",
+                "avg_temp": 26.0,
+                "avg_humidity": 60.0,
+                "avg_aqi": 51
+            },
+            {
+                "date": "2026-04-01",
+                "avg_temp": 27.0,
+                "avg_humidity": 60.0,
+                "avg_aqi": 52
+            },
+            {
+                "date": "2026-04-02",
+                "avg_temp": 22.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 40
+            },
+            {
+                "date": "2026-04-02",
+                "avg_temp": 23.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 41
+            },
+            {
+                "date": "2026-04-02",
+                "avg_temp": 22.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 40
+            },
+            {
+                "date": "2026-04-02",
+                "avg_temp": 23.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 41
+            }
+        ]
+    },
+    {
+        "name": "Student Access: /admin/analytics",
+        "method": "GET",
+        "endpoint": "/admin/analytics",
+        "actual_status": 403,
+        "expected_status": 403,
+        "status_match": true,
+        "response_time_ms": 27.33,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Admin access required"
+        }
+    },
+    {
+        "name": "No Token Access: /admin/analytics",
+        "method": "GET",
+        "endpoint": "/admin/analytics",
+        "actual_status": 401,
+        "expected_status": 401,
+        "status_match": true,
+        "response_time_ms": 18.14,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Not authenticated"
+        }
+    },
+    {
+        "name": "Admin Access: /admin/location-analytics",
+        "method": "GET",
+        "endpoint": "/admin/location-analytics",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 32.38,
+        "body_shape": "<class 'list'>",
+        "body": [
+            {
+                "location": "Test Lab A",
+                "avg_temp": 26.25,
+                "avg_humidity": 60.0,
+                "avg_aqi": 51.25,
+                "record_count": 4
+            },
+            {
+                "location": "AS BLOCK",
+                "avg_temp": 25.5,
+                "avg_humidity": 64.5,
+                "avg_aqi": 46.0,
+                "record_count": 2
+            },
+            {
+                "location": "Test Lab B",
+                "avg_temp": 22.5,
+                "avg_humidity": 55.0,
+                "avg_aqi": 40.5,
+                "record_count": 4
+            },
+            {
+                "location": "Campus North",
+                "avg_temp": 25.0,
+                "avg_humidity": 55.0,
+                "avg_aqi": 30.0,
+                "record_count": 7
+            }
+        ]
+    },
+    {
+        "name": "Student Access: /admin/location-analytics",
+        "method": "GET",
+        "endpoint": "/admin/location-analytics",
+        "actual_status": 403,
+        "expected_status": 403,
+        "status_match": true,
+        "response_time_ms": 27.25,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Admin access required"
+        }
+    },
+    {
+        "name": "No Token Access: /admin/location-analytics",
+        "method": "GET",
+        "endpoint": "/admin/location-analytics",
+        "actual_status": 401,
+        "expected_status": 401,
+        "status_match": true,
+        "response_time_ms": 28.64,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Not authenticated"
+        }
+    },
+    {
+        "name": "Admin Access: /admin/locations",
+        "method": "GET",
+        "endpoint": "/admin/locations",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 27.39,
+        "body_shape": "<class 'list'>",
+        "body": [
+            "Campus North",
+            "AS BLOCK",
+            "Test Lab A",
+            "Test Lab B"
+        ]
+    },
+    {
+        "name": "Student Access: /admin/locations",
+        "method": "GET",
+        "endpoint": "/admin/locations",
+        "actual_status": 403,
+        "expected_status": 403,
+        "status_match": true,
+        "response_time_ms": 19.55,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Admin access required"
+        }
+    },
+    {
+        "name": "No Token Access: /admin/locations",
+        "method": "GET",
+        "endpoint": "/admin/locations",
+        "actual_status": 401,
+        "expected_status": 401,
+        "status_match": true,
+        "response_time_ms": 13.72,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Not authenticated"
+        }
+    },
+    {
+        "name": "Admin Access: /admin/trends/aqi-monthly",
+        "method": "GET",
+        "endpoint": "/admin/trends/aqi-monthly",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 21.79,
+        "body_shape": "<class 'list'>",
+        "body": [
+            {
+                "month": "2026-03",
+                "avg_aqi": 33.5556
+            },
+            {
+                "month": "2026-04",
+                "avg_aqi": 45.875
+            }
+        ]
+    },
+    {
+        "name": "Student Access: /admin/trends/aqi-monthly",
+        "method": "GET",
+        "endpoint": "/admin/trends/aqi-monthly",
+        "actual_status": 403,
+        "expected_status": 403,
+        "status_match": true,
+        "response_time_ms": 25.38,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Admin access required"
+        }
+    },
+    {
+        "name": "No Token Access: /admin/trends/aqi-monthly",
+        "method": "GET",
+        "endpoint": "/admin/trends/aqi-monthly",
+        "actual_status": 401,
+        "expected_status": 401,
+        "status_match": true,
+        "response_time_ms": 14.34,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Not authenticated"
+        }
+    },
+    {
+        "name": "Admin Access: /admin/trends/pollution-dist",
+        "method": "GET",
+        "endpoint": "/admin/trends/pollution-dist",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 23.08,
+        "body_shape": "<class 'list'>",
+        "body": [
+            {
+                "pollution_level": "Good",
+                "count": 17
+            }
+        ]
+    },
+    {
+        "name": "Student Access: /admin/trends/pollution-dist",
+        "method": "GET",
+        "endpoint": "/admin/trends/pollution-dist",
+        "actual_status": 403,
+        "expected_status": 403,
+        "status_match": true,
+        "response_time_ms": 3.63,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Admin access required"
+        }
+    },
+    {
+        "name": "No Token Access: /admin/trends/pollution-dist",
+        "method": "GET",
+        "endpoint": "/admin/trends/pollution-dist",
+        "actual_status": 401,
+        "expected_status": 401,
+        "status_match": true,
+        "response_time_ms": 19.19,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Not authenticated"
+        }
+    },
+    {
+        "name": "Admin Access: /admin/trends/temp-hum-correlation",
+        "method": "GET",
+        "endpoint": "/admin/trends/temp-hum-correlation",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 9.75,
+        "body_shape": "<class 'list'>",
+        "body": [
+            {
+                "temperature": 25.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 25.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 25.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 25.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 25.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 25.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 25.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 22.0,
+                "humidity": 60.0
+            },
+            {
+                "temperature": 29.0,
+                "humidity": 69.0
+            },
+            {
+                "temperature": 27.0,
+                "humidity": 60.0
+            },
+            {
+                "temperature": 22.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 23.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 25.0,
+                "humidity": 60.0
+            },
+            {
+                "temperature": 26.0,
+                "humidity": 60.0
+            },
+            {
+                "temperature": 27.0,
+                "humidity": 60.0
+            },
+            {
+                "temperature": 22.0,
+                "humidity": 55.0
+            },
+            {
+                "temperature": 23.0,
+                "humidity": 55.0
+            }
+        ]
+    },
+    {
+        "name": "Student Access: /admin/trends/temp-hum-correlation",
+        "method": "GET",
+        "endpoint": "/admin/trends/temp-hum-correlation",
+        "actual_status": 403,
+        "expected_status": 403,
+        "status_match": true,
+        "response_time_ms": 5.5,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Admin access required"
+        }
+    },
+    {
+        "name": "No Token Access: /admin/trends/temp-hum-correlation",
+        "method": "GET",
+        "endpoint": "/admin/trends/temp-hum-correlation",
+        "actual_status": 401,
+        "expected_status": 401,
+        "status_match": true,
+        "response_time_ms": 16.02,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Not authenticated"
+        }
+    },
+    {
+        "name": "Login Failed Password",
+        "method": "POST",
+        "endpoint": "/login",
+        "actual_status": 400,
+        "expected_status": 400,
+        "status_match": true,
+        "response_time_ms": 361.97,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Incorrect username or password"
+        }
+    },
+    {
+        "name": "Login Unknown User",
+        "method": "POST",
+        "endpoint": "/login",
+        "actual_status": 400,
+        "expected_status": 400,
+        "status_match": true,
+        "response_time_ms": 23.39,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Incorrect username or password"
+        }
+    },
+    {
+        "name": "Add Data Missing Fields",
+        "method": "POST",
+        "endpoint": "/add-data",
+        "actual_status": 422,
+        "expected_status": 422,
+        "status_match": true,
+        "response_time_ms": 28.64,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": [
+                {
+                    "type": "missing",
+                    "loc": [
+                        "body",
+                        "date"
+                    ],
+                    "msg": "Field required",
+                    "input": {
+                        "temp": 10
+                    }
+                },
+                {
+                    "type": "missing",
+                    "loc": [
+                        "body",
+                        "temperature"
+                    ],
+                    "msg": "Field required",
+                    "input": {
+                        "temp": 10
+                    }
+                },
+                {
+                    "type": "missing",
+                    "loc": [
+                        "body",
+                        "humidity"
+                    ],
+                    "msg": "Field required",
+                    "input": {
+                        "temp": 10
+                    }
+                },
+                {
+                    "type": "missing",
+                    "loc": [
+                        "body",
+                        "aqi"
+                    ],
+                    "msg": "Field required",
+                    "input": {
+                        "temp": 10
+                    }
+                },
+                {
+                    "type": "missing",
+                    "loc": [
+                        "body",
+                        "pollution_level"
+                    ],
+                    "msg": "Field required",
+                    "input": {
+                        "temp": 10
+                    }
+                },
+                {
+                    "type": "missing",
+                    "loc": [
+                        "body",
+                        "location"
+                    ],
+                    "msg": "Field required",
+                    "input": {
+                        "temp": 10
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "Add Data Invalid AQI",
+        "method": "POST",
+        "endpoint": "/add-data",
+        "actual_status": 422,
+        "expected_status": 422,
+        "status_match": true,
+        "response_time_ms": 7.52,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": [
+                {
+                    "type": "less_than_equal",
+                    "loc": [
+                        "body",
+                        "aqi"
+                    ],
+                    "msg": "Input should be less than or equal to 500",
+                    "input": 999999,
+                    "ctx": {
+                        "le": 500
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "name": "PUT Non-existent ID",
+        "method": "PUT",
+        "endpoint": "/edit-data/999999",
+        "actual_status": 404,
+        "expected_status": 404,
+        "status_match": true,
+        "response_time_ms": 26.04,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Record not found"
+        }
+    },
+    {
+        "name": "Admin Delete Student A",
+        "method": "DELETE",
+        "endpoint": "/admin/users/test_student_a",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 41.07,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "User test_student_a deleted successfully"
+        }
+    },
+    {
+        "name": "Admin Delete Student B",
+        "method": "DELETE",
+        "endpoint": "/admin/users/test_student_b",
+        "actual_status": 200,
+        "expected_status": 200,
+        "status_match": true,
+        "response_time_ms": 16.23,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "message": "User test_student_b deleted successfully"
+        }
+    },
+    {
+        "name": "Login Deleted User",
+        "method": "POST",
+        "endpoint": "/login",
+        "actual_status": 400,
+        "expected_status": 400,
+        "status_match": true,
+        "response_time_ms": 37.42,
+        "body_shape": "<class 'dict'>",
+        "body": {
+            "detail": "Incorrect username or password"
+        }
+    }
+]

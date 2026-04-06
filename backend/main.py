@@ -14,12 +14,11 @@ from dotenv import load_dotenv
 from database import get_connection
 from passlib.context import CryptContext
 
-# Setup logging
+# Setup logging (Stdout only for Vercel)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler("api.log"),
         logging.StreamHandler()
     ]
 )
@@ -97,14 +96,19 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    # Automatically serve login.html as the landing page
-    try:
-        with open("../frontend/login.html", "r") as f:
-            return f.read()
-    except FileNotFoundError:
-        # Fallback if the path is different in some environments
-        with open("frontend/login.html", "r") as f:
-            return f.read()
+    # Attempt multiple paths for serverless compatibility
+    paths = [
+        "../frontend/login.html",
+        "frontend/login.html",
+        "./frontend/login.html"
+    ]
+    for path in paths:
+        try:
+            with open(path, "r") as f:
+                return f.read()
+        except FileNotFoundError:
+            continue
+    return HTMLResponse("<h1>404: Frontend not found</h1>", status_code=404)
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_page():
@@ -127,6 +131,8 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
             access_token = create_access_token(data={"sub": user["username"], "role": user["role"]})
             return {"access_token": access_token, "token_type": "bearer"}
         raise HTTPException(status_code=400, detail="Incorrect username or password")
+    except HTTPException as e:
+        raise e
     except Exception as e:
         logger.error(f"Login error: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
@@ -134,7 +140,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         cursor.close()
         conn.close()
 
-@app.post("/register")
+@app.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(user: UserRegister):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
@@ -149,6 +155,8 @@ async def register(user: UserRegister):
                        (user.username, user.email, hashed_password))
         conn.commit()
         return {"message": "Registration successful"}
+    except HTTPException as e:
+        raise e
     except Exception as e:
         logger.error(f"Registration error: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
@@ -156,7 +164,7 @@ async def register(user: UserRegister):
         cursor.close()
         conn.close()
 
-@app.post("/add-data")
+@app.post("/add-data", status_code=status.HTTP_201_CREATED)
 def add_data(data: DataPoint, current_user: dict = Depends(get_current_user)):
     conn = get_connection()
     cursor = conn.cursor()
@@ -416,7 +424,7 @@ def delete_user(username: str, current_user: dict = Depends(get_current_user)):
         cursor.close()
         conn.close()
 
-@app.post("/admin/register")
+@app.post("/admin/register", status_code=status.HTTP_201_CREATED)
 async def admin_register(user: UserRegister, current_user: dict = Depends(get_current_user)):
     if current_user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Admin access required")
@@ -433,6 +441,11 @@ async def admin_register(user: UserRegister, current_user: dict = Depends(get_cu
                        (user.username, user.email, hashed_password))
         conn.commit()
         return {"message": "User registered successfully"}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Admin registration error: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
         conn.close()
