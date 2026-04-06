@@ -8,11 +8,10 @@ ENV PYTHONUNBUFFERED=1
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies for mysql-connector-python
+# Install system dependencies for psycopg2
 RUN apt-get update && apt-get install -y \
     gcc \
-    default-libmysqlclient-dev \
-    pkg-config \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies

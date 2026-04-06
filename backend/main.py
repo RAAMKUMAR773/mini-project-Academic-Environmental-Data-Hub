@@ -1,17 +1,19 @@
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import os
+import logging
+import csv
+import jwt
+from datetime import datetime, timedelta
+from typing import List, Optional
+from pydantic import BaseModel, Field
 from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import datetime, timedelta
-import jwt
-import csv
-import os
-import logging
 from dotenv import load_dotenv
-from database import get_connection
+from database import get_connection, release_connection
 from passlib.context import CryptContext
 
 # Setup logging (Stdout only for Vercel)
@@ -123,7 +125,9 @@ def signup_page():
 @app.post("/login", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         cursor.execute("SELECT * FROM users WHERE username = %s", (form_data.username,))
         user = cursor.fetchone()
@@ -138,12 +142,14 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         raise HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(user: UserRegister):
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         # Check if user already exists
         cursor.execute("SELECT * FROM users WHERE username = %s OR email = %s", (user.username, user.email))
@@ -162,11 +168,13 @@ async def register(user: UserRegister):
         raise HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.post("/add-data", status_code=status.HTTP_201_CREATED)
 def add_data(data: DataPoint, current_user: dict = Depends(get_current_user)):
     conn = get_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
     cursor = conn.cursor()
     try:
         query = """
@@ -181,12 +189,14 @@ def add_data(data: DataPoint, current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.get("/view-data", response_model=List[dict])
 def view_data(current_user: dict = Depends(get_current_user)):
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         if current_user["role"] == "admin":
             cursor.execute("SELECT * FROM environment_data")
@@ -198,7 +208,7 @@ def view_data(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.post("/upload-csv")
 async def upload_csv(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
@@ -208,6 +218,8 @@ async def upload_csv(file: UploadFile = File(...), current_user: dict = Depends(
     next(reader)  # skip header row
 
     conn = get_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
     cursor = conn.cursor()
     try:
         for row in reader:
@@ -222,11 +234,13 @@ async def upload_csv(file: UploadFile = File(...), current_user: dict = Depends(
         return {"message": "CSV data uploaded successfully"}
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.get("/download-csv")
 def download_csv():
     conn = get_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT date, temperature, humidity, aqi, pollution_level, location, created_by FROM environment_data")
@@ -242,7 +256,7 @@ def download_csv():
         raise HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 # Admin Endpoints
 @app.get("/admin/analytics")
@@ -251,7 +265,9 @@ def get_analytics(location: Optional[str] = None, current_user: dict = Depends(g
         raise HTTPException(status_code=403, detail="Admin access required")
     
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         if location:
             query = """
@@ -280,7 +296,7 @@ def get_analytics(location: Optional[str] = None, current_user: dict = Depends(g
         return cursor.fetchall()
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.get("/admin/location-analytics")
 def get_location_analytics(current_user: dict = Depends(get_current_user)):
@@ -288,7 +304,9 @@ def get_location_analytics(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=403, detail="Admin access required")
     
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         query = """
             SELECT 
@@ -305,7 +323,7 @@ def get_location_analytics(current_user: dict = Depends(get_current_user)):
         return cursor.fetchall()
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.get("/admin/locations")
 def get_locations(current_user: dict = Depends(get_current_user)):
@@ -313,6 +331,8 @@ def get_locations(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=403, detail="Admin access required")
     
     conn = get_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT DISTINCT location FROM environment_data")
@@ -320,7 +340,7 @@ def get_locations(current_user: dict = Depends(get_current_user)):
         return locations
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.get("/admin/trends/aqi-monthly")
 def get_aqi_monthly_trend(current_user: dict = Depends(get_current_user)):
@@ -328,11 +348,13 @@ def get_aqi_monthly_trend(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=403, detail="Admin access required")
     
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         query = """
             SELECT 
-                DATE_FORMAT(date, '%Y-%m') as month,
+                TO_CHAR(date, 'YYYY-MM') as month,
                 AVG(aqi) as avg_aqi
             FROM environment_data
             GROUP BY month
@@ -342,7 +364,7 @@ def get_aqi_monthly_trend(current_user: dict = Depends(get_current_user)):
         return cursor.fetchall()
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.get("/admin/trends/pollution-dist")
 def get_pollution_distribution(location: Optional[str] = None, current_user: dict = Depends(get_current_user)):
@@ -350,7 +372,9 @@ def get_pollution_distribution(location: Optional[str] = None, current_user: dic
         raise HTTPException(status_code=403, detail="Admin access required")
     
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         if location:
             query = "SELECT pollution_level, COUNT(*) as count FROM environment_data WHERE location = %s GROUP BY pollution_level"
@@ -361,7 +385,7 @@ def get_pollution_distribution(location: Optional[str] = None, current_user: dic
         return cursor.fetchall()
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.get("/admin/trends/temp-hum-correlation")
 def get_temp_hum_correlation(location: Optional[str] = None, current_user: dict = Depends(get_current_user)):
@@ -369,7 +393,9 @@ def get_temp_hum_correlation(location: Optional[str] = None, current_user: dict 
         raise HTTPException(status_code=403, detail="Admin access required")
     
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         if location:
             query = "SELECT temperature, humidity FROM environment_data WHERE location = %s"
@@ -380,7 +406,7 @@ def get_temp_hum_correlation(location: Optional[str] = None, current_user: dict 
         return cursor.fetchall()
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.get("/admin/users")
 def get_user_stats(current_user: dict = Depends(get_current_user)):
@@ -388,7 +414,9 @@ def get_user_stats(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=403, detail="Admin access required")
     
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         query = """
             SELECT username, email, role, 
@@ -399,7 +427,7 @@ def get_user_stats(current_user: dict = Depends(get_current_user)):
         return cursor.fetchall()
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.delete("/admin/users/{username}")
 def delete_user(username: str, current_user: dict = Depends(get_current_user)):
@@ -410,6 +438,8 @@ def delete_user(username: str, current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=400, detail="Cannot delete the primary admin account")
     
     conn = get_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
     cursor = conn.cursor()
     try:
         # Check if user exists
@@ -422,7 +452,7 @@ def delete_user(username: str, current_user: dict = Depends(get_current_user)):
         return {"message": f"User {username} deleted successfully"}
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.post("/admin/register", status_code=status.HTTP_201_CREATED)
 async def admin_register(user: UserRegister, current_user: dict = Depends(get_current_user)):
@@ -430,7 +460,9 @@ async def admin_register(user: UserRegister, current_user: dict = Depends(get_cu
         raise HTTPException(status_code=403, detail="Admin access required")
         
     conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     try:
         cursor.execute("SELECT * FROM users WHERE username = %s OR email = %s", (user.username, user.email))
         if cursor.fetchone():
@@ -448,11 +480,13 @@ async def admin_register(user: UserRegister, current_user: dict = Depends(get_cu
         raise HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.put("/edit-data/{data_id}")
 def edit_data(data_id: int, data: DataPoint, current_user: dict = Depends(get_current_user)):
     conn = get_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
     cursor = conn.cursor()
     try:
         # Check if record exists and if user has permission
@@ -477,11 +511,13 @@ def edit_data(data_id: int, data: DataPoint, current_user: dict = Depends(get_cu
         raise e if isinstance(e, HTTPException) else HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
 @app.delete("/delete-data/{data_id}")
 def delete_data(data_id: int, current_user: dict = Depends(get_current_user)):
     conn = get_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection error")
     cursor = conn.cursor()
     try:
         # Check if record exists and if user has permission
@@ -501,5 +537,5 @@ def delete_data(data_id: int, current_user: dict = Depends(get_current_user)):
         raise e if isinstance(e, HTTPException) else HTTPException(status_code=500, detail="Internal server error")
     finally:
         cursor.close()
-        conn.close()
+        release_connection(conn)
 
